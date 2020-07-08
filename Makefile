@@ -12,10 +12,7 @@ lint: format
 	pipenv run flake8
 
 test:
-	pipenv run pytest
-
-test-html:
-	pipenv run pytest --cov-report html
+	pipenv run pytest --cov
 
 pr: lint test 
 
