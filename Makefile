@@ -3,6 +3,7 @@ target:
 
 dev:
 	pipenv install
+	pre-commit install
 
 format:
 	pipenv run isort -rc .
@@ -14,7 +15,7 @@ lint: format
 test:
 	pipenv run pytest --cov
 
-pr: lint test 
+pr: lint test
 
 build:
 	sam build
