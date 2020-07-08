@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: transcriptionsAPI
+
+Resources:
+  RestApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Models:
+        AudioFile:
+          type: 'object'
+          properties:
+            external-id:
+              type: string
+            file-location:
+              type: string
+      # #Cors: "*"
+
+  AddTranscription:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src
+      Handler: addTranscription.api_handler
+      Runtime: python3.8
+      Environment:
+        Variables:
+          TRANSCRIBE_BUCKET: !Ref TranscribeBucket
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Ref TranscribeBucket
+        - Statement:
+            Effect: Allow
+            Action: 'transcribe:*'
+            Resource: '*'
+      Events:
+        AddTranscription:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /transcriptions
+            Method: post
+            RequestModel:
+              Model: AudioFile
+              Required: true
+
+  TranscribeBucket:
+    Type: AWS::S3::Bucket
+

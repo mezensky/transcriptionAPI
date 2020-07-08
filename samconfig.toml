@@ -1,0 +1,10 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "transcriptionAPI"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-tour6dm4nqmq"
+s3_prefix = "transcriptionAPI"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+

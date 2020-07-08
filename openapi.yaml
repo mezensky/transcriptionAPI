@@ -1,0 +1,138 @@
+openapi: 3.0.0
+info:
+  version: '1.0.0'
+  title: 'TranscribeAPI'
+  description: 'get and push things to the data lake'
+
+paths:
+  /transcriptions:
+      post:
+        description:  Add transcription
+        tags:
+        - Transcription
+        operationId: 'addtranscription'
+        requestBody:
+          description: S3 location of audio file to transcribe
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AudioFile"
+        responses:
+          200:
+            description: "Returns the job details"
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/UploadResults"
+          500:
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error' 
+  /transcriptions/{transcriptionId}:
+      get:
+        description:  get transcription
+        tags:
+        - Transcription
+        operationId: 'gettranscription'
+        parameters:
+        - name: transcriptionId
+          in: path
+          description: transcriptionId
+          required: true
+          schema:
+            type: string
+        responses:
+          200:
+            description: "returns "
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/UploadResults"
+          500:
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error' 
+  /audio/convert:
+      post:
+        description:  convert audio file
+        tags:
+        - Audio Conversion
+        operationId: 'audioconvert'
+        requestBody:
+          required: true
+          description: S3 location of audio file to convert, media types
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MediaConvertRequest"
+
+        responses:
+          200:
+            description: "Could issue a receipt"
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/UploadResults"
+          500:
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error' 
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+    UploadResults:
+      type: object
+      properties:
+        body:
+          type: object
+          properties:
+            message: 
+              type: string
+        metaData:
+          type: object
+          properties:
+            message: 
+              type: string
+    AudioFile:
+      type: "object"
+      properties:
+        claim-id:
+          type: string
+        file-location:
+          type: string
+    
+    MediaConvertRequest:
+      type: "object"
+      properties:
+        source-media-type:
+          type: string
+        destination-media-type:
+          type: string
+        source-location:
+          type: string
+        destination-location:
+          type: string
+      required:
+        - source-media-type
+        - destination-media-type
+        
+    CallRecording:
+      type: "object"
+      properties:
+        file-name:
+          type: string
