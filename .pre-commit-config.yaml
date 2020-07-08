@@ -21,4 +21,4 @@ repos:
         entry: pytest -v
         language: system
         types: [python]
-        stages: [commit, push]
+        always_run: true
